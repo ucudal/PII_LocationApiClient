@@ -6,7 +6,7 @@
 
 # Cliente de la API REST que permite trajar con ubicaciones y distancias
 
-Este cliente [`LocationApiClient`](./blob/src/Library.LocationApiClient.cs) permite obtener:
+Este cliente [`LocationApiClient`](./blob/master/src/Library/LocationApiClient.cs) permite obtener:
 
 - Coordenadas geográficas a partir de direcciones o puntos de interés
 
@@ -45,7 +45,7 @@ Las coordenadas de 'Av. 8 de Octubre 2738' son '-34.88845:-56.15922'
 Las coordenadas de 'Comandante Braga 2715' son '-34.88446:-56.16203'
 ```
 
-El método [`GetLocation`](.\blob\srs\Library\LocationApiClient.cs#GetLocation) soporta los siguientes parámetros:
+El método [`GetLocation`](./blob/master/src/Library/LocationApiClient.cs#GetLocation) soporta los siguientes parámetros:
 
 - Address: Una dirección con calle, número de puerta, etc. o ruta, kilómetro, etc. Es obligatorio.
 
@@ -55,7 +55,7 @@ El método [`GetLocation`](.\blob\srs\Library\LocationApiClient.cs#GetLocation) 
 
 - Country: El país. Es opcional. El valor predeterminado es `Uruguay`.
 
-El resultado es de tipo [`Location`](.\blob\src\Library\Location.cs) que además de las coordenadas `Latitude`, `Longitude`, y otros datos normalizados de la dirección, incluye un valor `Found` que indica si la dirección se encontró o no. Tengan en cuenta que no todas las direcciones pueden ser encontradas, prueben buscarlas en [Bing Maps](https://www.bing.com/maps) para estar seguros.
+El resultado es de tipo [`Location`](/blob/master/src/Library/Location.cs) que además de las coordenadas `Latitude`, `Longitude`, y otros datos normalizados de la dirección, incluye un valor `Found` que indica si la dirección se encontró o no. Tengan en cuenta que no todas las direcciones pueden ser encontradas, prueben buscarlas en [Bing Maps](https://www.bing.com/maps) para estar seguros.
 
 Las instancias de `Location` se utilizan posteriormente para calcular la distancia entre dos coordenadas o para descargar una mapa de una coordenada, como explicamos más adelante.
 
