@@ -22,6 +22,8 @@ La API está hosteada en [Azure](https://azure.microsoft.com/en-us/) y fue desar
 
 :warning: Estamos usando cuentas gratuitas de Bing Maps y de Azure que permiten enviar una cantidad limitada de peticiones a la API. Por favor usen esta funcionalidad con discreción y sólo para el proyecto del curso.
 
+El cliente hace llamadas a la API REST en forma asincrónica. Por eso los métodos están marcados como `async`. Para usarlos deben agregar antes de la llamada al método la palabra clave `await` y el método en el que se hace esa llamada debe retornar `async Task` o `async Task<T>` donde `T` es el tipo del resultado. Más información en [Programación asincrónica con async y await](https://docs.microsoft.com/es-es/dotnet/csharp/programming-guide/concepts/async/).
+
 ### Obtener las coordenadas de una dirección
 
 ```csharp
@@ -45,7 +47,7 @@ Las coordenadas de 'Av. 8 de Octubre 2738' son '-34.88845:-56.15922'
 Las coordenadas de 'Comandante Braga 2715' son '-34.88446:-56.16203'
 ```
 
-El método [`GetLocation`](../../blob/master/src/Library/LocationApiClient.cs#GetLocation) soporta los siguientes parámetros:
+El método [`GetLocation`](../../blob/master/src/Library/LocationApiClient.cs#L36) soporta los siguientes parámetros:
 
 - Address: Una dirección con calle, número de puerta, etc. o ruta, kilómetro, etc. Es obligatorio.
 
@@ -82,7 +84,7 @@ La distancia entre 'Av. 8 de Octubre 2738' y 'Comandante Braga 2715' es de 0.608
 
 El resultado de tipo [`Distance`](../../blob/master/src/Library/Distance.cs) incluye la distancia en kilómetros y tiempo en minutos que se demora en recorrer esa distancia en auto.
 
-El método [`GetDistance`](../../blob/master/src/Library/LocationApiClient.cs#GetDistance) está sobrecargado y pude ser usado tanto con dos instancias de `Location` previamente obtenidas usando el método `GetLocation` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
+El método [`GetDistance`](../../blob/master/src/Library/LocationApiClient.cs#L58) está sobrecargado y pude ser usado tanto con dos instancias de `Location` previamente obtenidas usando el método `GetLocation` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
 
 > **Nota** Cuando usen la versión con direcciones, agreguen además de la dirección, la ciudad, el departamento, y el país.
 
@@ -99,7 +101,7 @@ Esto descarga un mapa como este:
 
 Por simplicidad no es posible cambiar el tamaño del mapa, pero sí pueden cambiar el nivel de zoom.
 
-El método [`DownloadMap../../blob/master/src/Library/LocationApiClient.cs#DownloadMap`]() soporta los siguientes parámetros:
+El método [`DownloadMap`](../../blob/master/src/Library/LocationApiClient.cs#DownloadMap) soporta los siguientes parámetros:
 
 - Latitude: La latitud de la coordenada en el centro del mapa. Es obligatorio.
 

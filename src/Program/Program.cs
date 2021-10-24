@@ -4,9 +4,15 @@ using LocationApi;
 
 namespace LocationApiDemo
 {
+    /// <summary>
+    /// Un programa que demuestra el uso del cliente de la API REST de localización.
+    /// </summary>
     public class Program
     {
-        public static async Task Main(string[] args)
+        /// <summary>
+        /// Punto de entrada al programa.
+        /// </summary>
+        public static async Task Main()
         {
             const string addressCentral = "Av. 8 de Octubre 2738";
             const string addressMullin = "Comandante Braga 2715";
