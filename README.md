@@ -6,7 +6,7 @@
 
 # Cliente de la API REST que permite trajar con ubicaciones y distancias
 
-Este cliente [`LocationApiClient`](/blob/master/src/Library/LocationApiClient.cs) permite obtener:
+Este cliente [`LocationApiClient`](../../src/Library/LocationApiClient.cs) permite obtener:
 
 - Coordenadas geográficas a partir de direcciones o puntos de interés
 
