@@ -45,7 +45,7 @@ Las coordenadas de 'Av. 8 de Octubre 2738' son '-34.88845:-56.15922'
 Las coordenadas de 'Comandante Braga 2715' son '-34.88446:-56.16203'
 ```
 
-El método [`GetLocation`](./blob/master/src/Library/LocationApiClient.cs#GetLocation) soporta los siguientes parámetros:
+El método [`GetLocation`](../../blob/master/src/Library/LocationApiClient.cs#GetLocation) soporta los siguientes parámetros:
 
 - Address: Una dirección con calle, número de puerta, etc. o ruta, kilómetro, etc. Es obligatorio.
 
@@ -55,7 +55,7 @@ El método [`GetLocation`](./blob/master/src/Library/LocationApiClient.cs#GetLoc
 
 - Country: El país. Es opcional. El valor predeterminado es `Uruguay`.
 
-El resultado es de tipo [`Location`](/blob/master/src/Library/Location.cs) que además de las coordenadas `Latitude`, `Longitude`, y otros datos normalizados de la dirección, incluye un valor `Found` que indica si la dirección se encontró o no. Tengan en cuenta que no todas las direcciones pueden ser encontradas, prueben buscarlas en [Bing Maps](https://www.bing.com/maps) para estar seguros.
+El resultado es de tipo [`Location`](../../blob/master/src/Library/Location.cs) que además de las coordenadas `Latitude`, `Longitude`, y otros datos normalizados de la dirección, incluye un valor `Found` que indica si la dirección se encontró o no. Tengan en cuenta que no todas las direcciones pueden ser encontradas, prueben buscarlas en [Bing Maps](https://www.bing.com/maps) para estar seguros.
 
 Las instancias de `Location` se utilizan posteriormente para calcular la distancia entre dos coordenadas o para descargar una mapa de una coordenada, como explicamos más adelante.
 
@@ -80,7 +80,9 @@ La distancia entre '-34.88845,-56.15922' y '-34.88446,-56.16203' es de 0.608 kil
 La distancia entre 'Av. 8 de Octubre 2738' y 'Comandante Braga 2715' es de 0.608 kilómetros.
 ```
 
-El método `GetDistance` está sobrecargado y pude ser usado tanto con dos instancias de `Location` previamente obtenidas usando el método `GetLocation` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
+El resultado de tipo [`Distance`](../../blob/master/src/Library/Distance.cs) incluye la distancia en kilómetros y tiempo en minutos que se demora en recorrer esa distancia en auto.
+
+El método [`GetDistance`](../../blob/master/src/Library/LocationApiClient.cs#GetDistance) está sobrecargado y pude ser usado tanto con dos instancias de `Location` previamente obtenidas usando el método `GetLocation` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
 
 > **Nota** Cuando usen la versión con direcciones, agreguen además de la dirección, la ciudad, el departamento, y el país.
 
@@ -97,7 +99,7 @@ Esto descarga un mapa como este:
 
 Por simplicidad no es posible cambiar el tamaño del mapa, pero sí pueden cambiar el nivel de zoom.
 
-El método `DownloadMap` soporta los siguientes parámetros:
+El método [`DownloadMap../../blob/master/src/Library/LocationApiClient.cs#DownloadMap`]() soporta los siguientes parámetros:
 
 - Latitude: La latitud de la coordenada en el centro del mapa. Es obligatorio.
 
@@ -123,7 +125,7 @@ Esto descarga un mapa como este:
 
 Por simplicidad no es posible cambiar el tamaño del mapa, se determina automáticamente a partir de las coordenadas del origen y el destino.
 
-El método `DownloadRoute` soporta los siguientes parámetros:
+El método [`DownloadRoute`](../../blob/master/src/Library/LocationApiClient.cs#DownloadRoute) soporta los siguientes parámetros:
 
 - FromLatitude: La latitud de la coordenada del origen. Es obligatorio.
 
