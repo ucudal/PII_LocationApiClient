@@ -1,8 +1,8 @@
-namespace LocationApi
+namespace Ucu.Poo.LocationApi.Client
 {
     /// <summary>
     /// Representa las coordenadas y otros datos de la ubicación de una dirección retornada en el método
-    /// <see cref="LocationApiClient.GetLocation(string, string, string, string)"/>.
+    /// <see cref="LocationApiClient.GetLocationAsync(string, string, string, string)"/>.
     /// </summary>
     public class Location
     {

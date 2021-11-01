@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using System.IO;
 
-namespace LocationApi
+namespace Ucu.Poo.LocationApi.Client
 {
     public class LocationApiClient
     {
@@ -41,7 +41,7 @@ namespace LocationApi
         /// <param name="department">El departamento, estado, provincia, etc. Es opcional. El valor predeterminado es `ontevideo.</param>
         /// <param name="country">El país. Es opcional. El valor predeterminado es Uruguay.</param>
         /// <returns>Las coordenadas de la dirección.</returns>
-        public async Task<Location> GetLocation(string address, string city = "Montevideo",
+        public async Task<Location> GetLocationAsync(string address, string city = "Montevideo",
             string department = "Montevideo", string country = "Uruguay")
         {
             var parameters = new Dictionary<string, string>
@@ -69,7 +69,7 @@ namespace LocationApi
         /// <param name="from">La coordenada de origen.</param>
         /// <param name="to">La coordenada de destino.</param>
         /// <returns>La distancia entre las dos coordenadas.</returns>
-        public async Task<Distance> GetDistance(Location from, Location to)
+        public async Task<Distance> GetDistanceAsync(Location from, Location to)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -96,7 +96,7 @@ namespace LocationApi
         /// <param name="from">La dirección de origen.</param>
         /// <param name="to">La dirección de destino.</param>
         /// <returns>La distancia entre las dos direcciones.</returns>
-        public async Task<Distance> GetDistance(string from, string to)
+        public async Task<Distance> GetDistanceAsync(string from, string to)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -123,7 +123,7 @@ namespace LocationApi
         /// <param name="path">La ruta del archivo donde guardar el mapa. El formato es PNG.</param>
         /// <param name="zoomLevel">El nivel de zoom del mapa entre 1 y 20. Es opcional. El valor predeterminado es
         /// 15.</param>
-        public async Task DownloadMap(double latitude, double longitude, string path, int zoomLevel = 15)
+        public async Task DownloadMapAsync(double latitude, double longitude, string path, int zoomLevel = 15)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -151,7 +151,7 @@ namespace LocationApi
         /// <param name="toLatitude">La latitud de la coordenada de destino.</param>
         /// <param name="toLongitude">La longitud de la coordenada de destino.</param>
         /// <param name="path">La ruta del archivo donde guardar el mapa. Es formato es PNG.</param>
-        public async Task DownloadRoute(double fromLatitude, double fromLongitude,
+        public async Task DownloadRouteAsync(double fromLatitude, double fromLongitude,
             double toLatitude, double toLongitude, string path)
         {
             var parameters = new Dictionary<string, string>

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LocationApi;
+using Ucu.Poo.LocationApi.Client;
 
-namespace LocationApiDemo
+namespace Ucu.Poo.LocationApi.Demo
 {
     /// <summary>
     /// Un programa que demuestra el uso del cliente de la API REST de localización.

@@ -1,9 +1,9 @@
-namespace LocationApi
+namespace Ucu.Poo.LocationApi.Client
 {
     /// <summary>
     /// Representa la distancia entre las coordenas o las direcciones de origen y destino retornada en los métodos
-    /// <see cref="LocationApiClient.GetDistance(Location, Location)"/> o
-    /// <see cref="LocationApiClient.GetDistance(string, string)"/>.
+    /// <see cref="LocationApiClient.GetDistanceAsync(Location, Location)"/> o
+    /// <see cref="LocationApiClient.GetDistanceAsync(string, string)"/>.
     /// </summary>
     public class Distance
     {
