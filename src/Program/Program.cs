@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Ucu.Poo.LocationApi.Client;
+using Ucu.Poo.Locations.Client;
 
 namespace Ucu.Poo.LocationApi.Demo
 {

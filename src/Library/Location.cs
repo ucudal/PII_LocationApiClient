@@ -1,4 +1,4 @@
-namespace Ucu.Poo.LocationApi.Client
+namespace Ucu.Poo.Locations.Client
 {
     /// <summary>
     /// Representa las coordenadas y otros datos de la ubicación de una dirección retornada en el método

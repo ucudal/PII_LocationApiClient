@@ -1,4 +1,4 @@
-namespace Ucu.Poo.LocationApi.Client
+namespace Ucu.Poo.Locations.Client
 {
     /// <summary>
     /// Representa la distancia entre las coordenas o las direcciones de origen y destino retornada en los métodos

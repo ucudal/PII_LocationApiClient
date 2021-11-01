@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using System.IO;
 
-namespace Ucu.Poo.LocationApi.Client
+namespace Ucu.Poo.Locations.Client
 {
     public class LocationApiClient
     {
