@@ -53,7 +53,7 @@ Las coordenadas de 'Av. 8 de Octubre 2738' son '-34.88845:-56.15922'
 Las coordenadas de 'Comandante Braga 2715' son '-34.88446:-56.16203'
 ```
 
-El método `GetLocation` o su variante asincrónica `GetLocationAsync` soporta los siguientes parámetros:
+El método `GetLocation` y su variante asincrónica `GetLocationAsync` soportan los siguientes parámetros:
 
 - Address: Una dirección con calle, número de puerta, etc. o ruta, kilómetro, etc. Es obligatorio.
 
@@ -77,6 +77,7 @@ Distance distance = await client.GetDistanceAsync(locationCentral, locationMulli
 Console.WriteLine($"La distancia entre '{locationCentral.Latitude},{locationCentral.Longitude}' y "+
     $"'{locationMullin.Latitude},{locationMullin.Longitude}' es de {distance.TravelDistance} kilómetros.");
 
+// Es posible omitir await y usar GetDistance en lugar de GetDistanceAsync
 distance = await client.GetDistanceAsync(addressCentral, addressMullin);
 Console.WriteLine($"La distancia entre '{addressCentral}' y '{addressMullin}' " +
     $"es de {distance.TravelDistance} kilómetros.");
@@ -91,14 +92,15 @@ La distancia entre 'Av. 8 de Octubre 2738' y 'Comandante Braga 2715' es de 0.608
 
 El resultado de tipo `Distance` incluye la distancia en kilómetros y tiempo en minutos que se demora en recorrer esa distancia en auto.
 
-El método `GetDistance` o su variante asincrónica `GetDistanceAsync` están sobrecargados y puden ser usados tanto con dos instancias de `Location` previamente obtenidas usando `GetLocation` o `GetLocationAsync` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
+El método `GetDistance` y su variante asincrónica `GetDistanceAsync` están sobrecargados y puden ser usados tanto con dos instancias de `Location` previamente obtenidas usando `GetLocation` o `GetLocationAsync` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
 
 > **Nota** Cuando usen la versión con direcciones, agreguen además de la dirección, la ciudad, el departamento, y el país.
 
 ### Descargar el mapa de una coordenada
 
 ```csharp
-await client.DownloadMap(locationCentral.Latitude, locationCentral.Longitude, @"map.png");
+// Es posible omitir await y usar DownloadMap en lugar de DownloadMapAsync
+await client.DownloadMapAsync(locationCentral.Latitude, locationCentral.Longitude, @"map.png");
 Console.WriteLine($"Descargado el mapa de '{addressCentral}'");
 ```
 
@@ -108,7 +110,7 @@ Esto descarga un mapa como este:
 
 Por simplicidad no es posible cambiar el tamaño del mapa, pero sí pueden cambiar el nivel de zoom.
 
-El método [`DownloadMap`](../../blob/master/src/Library/LocationApiClient.cs#DownloadMap) soporta los siguientes parámetros:
+El método `DownloadMap` y su variante asincrónica `DownloadMapAsync` soportan los siguientes parámetros:
 
 - Latitude: La latitud de la coordenada en el centro del mapa. Es obligatorio.
 
@@ -123,7 +125,8 @@ El método [`DownloadMap`](../../blob/master/src/Library/LocationApiClient.cs#Do
 ### Descargar la ruta entre dos coordenadas
 
 ```csharp
-await client.DownloadRoute(locationCentral.Latitude, locationCentral.Longitude,
+// Es posible omitir await y usar DownloadRoute en lugar de DownloadRouteAsync
+await client.DownloadRouteAsync(locationCentral.Latitude, locationCentral.Longitude,
     locationMullin.Latitude, locationMullin.Longitude, @"route.png");
 Console.WriteLine($"Descargado el mapa de '{addressCentral}' a '{addressMullin}'");
 ```
@@ -134,7 +137,7 @@ Esto descarga un mapa como este:
 
 Por simplicidad no es posible cambiar el tamaño del mapa, se determina automáticamente a partir de las coordenadas del origen y el destino.
 
-El método [`DownloadRoute`](../../blob/master/src/Library/LocationApiClient.cs#DownloadRoute) soporta los siguientes parámetros:
+El método `DownloadRoute` y su variante asincrónica `DownloadRouteAsync` soportan los siguientes parámetros:
 
 - FromLatitude: La latitud de la coordenada del origen. Es obligatorio.
 
