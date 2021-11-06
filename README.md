@@ -22,7 +22,11 @@ La API está hosteada en [Azure](https://azure.microsoft.com/en-us/) y fue desar
 
 :warning: Estamos usando cuentas gratuitas de Bing Maps y de Azure que permiten enviar una cantidad limitada de peticiones a la API. Por favor usen esta funcionalidad con discreción y sólo para el proyecto del curso.
 
-El cliente hace llamadas a la API REST en forma asincrónica. Por eso los métodos están marcados como `async`. Para usarlos deben agregar antes de la llamada al método la palabra clave `await` y el método en el que se hace esa llamada debe retornar `async Task` o `async Task<T>` donde `T` es el tipo del resultado. Más información en [Programación asincrónica con async y await](https://docs.microsoft.com/es-es/dotnet/csharp/programming-guide/concepts/async/).
+El cliente hace llamadas a la API REST en forma asincrónica pero ofrece tanto variantes asincrónicas como sincrónicas:
+
+- En la variante asincrónica los metodos terminan con el sufijo `Async` y  están marcados como `async`. Para usarlos deben agregar antes de la llamada al método la palabra clave `await` y el método en el que se hace esa llamada debe retornar `async Task` o `async Task<T>` donde `T` es el tipo del resultado. Más información en [Programación asincrónica con async y await](https://docs.microsoft.com/es-es/dotnet/csharp/programming-guide/concepts/async/).
+
+- En la variante sincrónica los métodos no tiene sufijo y son void o retornan `T` en lugar de `async Task` o `async Task<T>` donde `T` es el tipo del resultado.
 
 ### Obtener las coordenadas de una dirección
 
@@ -31,11 +35,13 @@ const string addressCentral = "Av. 8 de Octubre 2738";
 const string addressMullin = "Comandante Braga 2715";
 LocationApiClient client = new LocationApiClient();
 
-Location locationCentral = await client.GetLocation(addressCentral);
+// Es posible omitir await y usar GetLocation en lugar de GetLocationAsync
+Location locationCentral = await client.GetLocationAsync(addressCentral);
 Console.WriteLine($"Las coordenadas de '{addressCentral}' son " +
     $"'{locationCentral.Latitude}:{locationCentral.Longitude}'");
 
-Location locationMullin = await client.GetLocation(addressMullin);
+// Es posible omitir await y usar GetLocation en lugar de GetLocationAsync
+Location locationMullin = await client.GetLocationAsync(addressMullin);
 Console.WriteLine($"Las coordenadas de '{addressMullin}' son " +
     $"'{locationMullin.Latitude}:{locationMullin.Longitude}'");
 ```
@@ -47,7 +53,7 @@ Las coordenadas de 'Av. 8 de Octubre 2738' son '-34.88845:-56.15922'
 Las coordenadas de 'Comandante Braga 2715' son '-34.88446:-56.16203'
 ```
 
-El método [`GetLocation`](../../blob/master/src/Library/LocationApiClient.cs#L36) soporta los siguientes parámetros:
+El método `GetLocation` o su variante asincrónica `GetLocationAsync` soporta los siguientes parámetros:
 
 - Address: Una dirección con calle, número de puerta, etc. o ruta, kilómetro, etc. Es obligatorio.
 
@@ -57,7 +63,7 @@ El método [`GetLocation`](../../blob/master/src/Library/LocationApiClient.cs#L3
 
 - Country: El país. Es opcional. El valor predeterminado es `Uruguay`.
 
-El resultado es de tipo [`Location`](../../blob/master/src/Library/Location.cs) que además de las coordenadas `Latitude`, `Longitude`, y otros datos normalizados de la dirección, incluye un valor `Found` que indica si la dirección se encontró o no. Tengan en cuenta que no todas las direcciones pueden ser encontradas, prueben buscarlas en [Bing Maps](https://www.bing.com/maps) para estar seguros.
+El resultado es de tipo `Location` que además de las coordenadas `Latitude`, `Longitude`, y otros datos normalizados de la dirección, incluye un valor `Found` que indica si la dirección se encontró o no. Tengan en cuenta que no todas las direcciones pueden ser encontradas, prueben buscarlas en [Bing Maps](https://www.bing.com/maps) para estar seguros.
 
 Las instancias de `Location` se utilizan posteriormente para calcular la distancia entre dos coordenadas o para descargar una mapa de una coordenada, como explicamos más adelante.
 
@@ -66,11 +72,12 @@ Las instancias de `Location` se utilizan posteriormente para calcular la distanc
 ### Obtener la distancia entre dos coordenadas o entre dos direcciones
 
 ```csharp
-Distance distance = await client.GetDistance(locationCentral, locationMullin);
+// Es posible omitir await y usar GetDistance en lugar de GetDistanceAsync
+Distance distance = await client.GetDistanceAsync(locationCentral, locationMullin);
 Console.WriteLine($"La distancia entre '{locationCentral.Latitude},{locationCentral.Longitude}' y "+
     $"'{locationMullin.Latitude},{locationMullin.Longitude}' es de {distance.TravelDistance} kilómetros.");
 
-distance = await client.GetDistance(addressCentral, addressMullin);
+distance = await client.GetDistanceAsync(addressCentral, addressMullin);
 Console.WriteLine($"La distancia entre '{addressCentral}' y '{addressMullin}' " +
     $"es de {distance.TravelDistance} kilómetros.");
 ```
@@ -82,9 +89,9 @@ La distancia entre '-34.88845,-56.15922' y '-34.88446,-56.16203' es de 0.608 kil
 La distancia entre 'Av. 8 de Octubre 2738' y 'Comandante Braga 2715' es de 0.608 kilómetros.
 ```
 
-El resultado de tipo [`Distance`](../../blob/master/src/Library/Distance.cs) incluye la distancia en kilómetros y tiempo en minutos que se demora en recorrer esa distancia en auto.
+El resultado de tipo `Distance` incluye la distancia en kilómetros y tiempo en minutos que se demora en recorrer esa distancia en auto.
 
-El método [`GetDistance`](../../blob/master/src/Library/LocationApiClient.cs#L58) está sobrecargado y pude ser usado tanto con dos instancias de `Location` previamente obtenidas usando el método `GetLocation` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
+El método `GetDistance` o su variante asincrónica `GetDistanceAsync` están sobrecargados y puden ser usados tanto con dos instancias de `Location` previamente obtenidas usando `GetLocation` o `GetLocationAsync` como con direcciones. Es más confiable usar `Location` en lugar de direcciones, porque como explicamos antes, las direcciones no siempre pueden ser obtenidas.
 
 > **Nota** Cuando usen la versión con direcciones, agreguen además de la dirección, la ciudad, el departamento, y el país.
 

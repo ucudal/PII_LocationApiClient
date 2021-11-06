@@ -18,28 +18,55 @@ namespace Ucu.Poo.LocationApi.Demo
             const string addressMullin = "Comandante Braga 2715";
             LocationApiClient client = new LocationApiClient();
 
-            Location locationCentral = await client.GetLocation(addressCentral);
+            // Versión asincrónica
+
+            Location locationCentral = await client.GetLocationAsync(addressCentral);
             Console.WriteLine($"Las coordenadas de '{addressCentral}' son " +
                 $"'{locationCentral.Latitude}:{locationCentral.Longitude}'");
 
-            Location locationMullin = await client.GetLocation(addressMullin);
+            Location locationMullin = await client.GetLocationAsync(addressMullin);
             Console.WriteLine($"Las coordenadas de '{addressMullin}' son " +
                 $"'{locationMullin.Latitude}:{locationMullin.Longitude}'");
 
-            Distance distance = await client.GetDistance(locationCentral, locationMullin);
+            Distance distance = await client.GetDistanceAsync(locationCentral, locationMullin);
             Console.WriteLine($"La distancia entre '{locationCentral.Latitude},{locationCentral.Longitude}' y "+
                 $"'{locationMullin.Latitude},{locationMullin.Longitude}' es de {distance.TravelDistance} kilómetros.");
 
-            distance = await client.GetDistance(addressCentral, addressMullin);
+            distance = await client.GetDistanceAsync(addressCentral, addressMullin);
             Console.WriteLine($"La distancia entre '{addressCentral}' y '{addressMullin}' " +
                 $"es de {distance.TravelDistance} kilómetros.");
 
-            await client.DownloadMap(locationCentral.Latitude, locationCentral.Longitude, @"map.png");
-            Console.WriteLine($"Descargado el mapa de '{addressCentral}'");
+            await client.DownloadMapAsync(locationCentral.Latitude, locationCentral.Longitude, @"map-a.png");
+            Console.WriteLine($"Descargado asincrónicamente el mapa de '{addressCentral}'");
 
-            await client.DownloadRoute(locationCentral.Latitude, locationCentral.Longitude,
-                locationMullin.Latitude, locationMullin.Longitude, @"route.png");
-            Console.WriteLine($"Descargado el mapa de '{addressCentral}' a '{addressMullin}'");
+            await client.DownloadRouteAsync(locationCentral.Latitude, locationCentral.Longitude,
+                locationMullin.Latitude, locationMullin.Longitude, @"route-a.png");
+            Console.WriteLine($"Descargado asincrónicamente el mapa de '{addressCentral}' a '{addressMullin}'");
+
+            // Versión sincrónica
+
+            locationCentral = client.GetLocation(addressCentral);
+            Console.WriteLine($"Las coordenadas de '{addressCentral}' son " +
+                $"'{locationCentral.Latitude}:{locationCentral.Longitude}'");
+
+            locationMullin = client.GetLocation(addressMullin);
+            Console.WriteLine($"Las coordenadas de '{addressMullin}' son " +
+                $"'{locationMullin.Latitude}:{locationMullin.Longitude}'");
+
+            distance = client.GetDistance(locationCentral, locationMullin);
+            Console.WriteLine($"La distancia entre '{locationCentral.Latitude},{locationCentral.Longitude}' y "+
+                $"'{locationMullin.Latitude},{locationMullin.Longitude}' es de {distance.TravelDistance} kilómetros.");
+
+            distance = client.GetDistance(addressCentral, addressMullin);
+            Console.WriteLine($"La distancia entre '{addressCentral}' y '{addressMullin}' " +
+                $"es de {distance.TravelDistance} kilómetros.");
+
+            client.DownloadMap(locationCentral.Latitude, locationCentral.Longitude, @"map-s.png");
+            Console.WriteLine($"Descargado sincrónicamente el mapa de '{addressCentral}'");
+
+            client.DownloadRoute(locationCentral.Latitude, locationCentral.Longitude,
+                locationMullin.Latitude, locationMullin.Longitude, @"route-s.png");
+            Console.WriteLine($"Descargado sincrónicamente el mapa de '{addressCentral}' a '{addressMullin}'");
         }
     }
 }

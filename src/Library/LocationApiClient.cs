@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Text.Json;
 using System.IO;
+using Nito.AsyncEx;
 
 namespace Ucu.Poo.Locations.Client
 {
@@ -64,6 +65,15 @@ namespace Ucu.Poo.Locations.Client
         }
 
         /// <summary>
+        /// Versión sincrónica de <see cref="GetLocationAsync"/>.
+        /// </summary>
+        public Location GetLocation(string address, string city = "Montevideo",
+            string department = "Montevideo", string country = "Uruguay")
+        {
+            return AsyncContext.Run(() => this.GetLocationAsync(address, city, department, country));
+        }
+
+        /// <summary>
         /// Obtiene la distancia entre dos coordenadas.
         /// </summary>
         /// <param name="from">La coordenada de origen.</param>
@@ -91,6 +101,14 @@ namespace Ucu.Poo.Locations.Client
         }
 
         /// <summary>
+        /// Versión sincrónica de <see cref="GetDistanceAsync(Location,Location)"/>.
+        /// </summary>
+        public Distance GetDistance(Location from, Location to)
+        {
+            return AsyncContext.Run(() => this.GetDistanceAsync(from, to));
+        }
+
+        /// <summary>
         /// Obtiene la distancia entre dos direcciones.
         /// </summary>
         /// <param name="from">La dirección de origen.</param>
@@ -113,6 +131,14 @@ namespace Ucu.Poo.Locations.Client
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             return result;
+        }
+
+       /// <summary>
+        /// Versión sincrónica de <see cref="GetDistanceAsync(string,string)"/>.
+        /// </summary>
+        public Distance GetDistance(string from, string to)
+        {
+            return AsyncContext.Run(() => this.GetDistanceAsync(from, to));
         }
 
         /// <summary>
@@ -143,6 +169,14 @@ namespace Ucu.Poo.Locations.Client
             }
         }
 
+       /// <summary>
+        /// Versión sincrónica de <see cref="DownloadMapAsync()"/>.
+        /// </summary>
+        public void DownloadMap(double latitude, double longitude, string path, int zoomLevel = 15)
+        {
+            AsyncContext.Run(() => this.DownloadMapAsync(latitude, longitude, path, zoomLevel));
+        }
+
         /// <summary>
         /// Un mapa con una ruta entre dos coordenadas.
         /// </summary>
@@ -171,6 +205,15 @@ namespace Ucu.Poo.Locations.Client
                 await response.Content.CopyToAsync(fs);
                 var stream = await response.Content.ReadAsStreamAsync();
             }
+        }
+
+       /// <summary>
+        /// Versión sincrónica de <see cref="DownloadRouteAsync()"/>.
+        /// </summary>
+        public void DownloadRoute(double fromLatitude, double fromLongitude,
+            double toLatitude, double toLongitude, string path)
+        {
+            AsyncContext.Run(() => this.DownloadRouteAsync(fromLatitude, fromLongitude, toLatitude, toLongitude, path));
         }
     }
 }
