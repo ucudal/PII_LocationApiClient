@@ -1,37 +1,64 @@
-﻿using System;
-using System.Globalization;
-using System.Web;
-using System.Net.Http;
+﻿//-----------------------------------------------------------------------------------
+// <copyright file="LocationApiClient.cs" company="Universidad Católica del Uruguay">
+//     Copyright (c) Programación II. Derechos reservados.
+// </copyright>
+//-----------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Text.Json;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Web;
 using Nito.AsyncEx;
+using PostSharp.Patterns.Contracts;
 
 namespace Ucu.Poo.Locations.Client
 {
-    public class LocationApiClient
+    /// <summary>
+    /// Un cliente de la API de localización.
+    /// </summary>
+    public class LocationApiClient : IDisposable
     {
         private const string BaseUrl = "https://pii-locationapi.azurewebsites.net";
 
         private HttpClient client = new HttpClient();
 
-        private string DistanceUrl { get { return BaseUrl + "/distance"; } }
+        private bool disposedValue;
 
-        private string LocationUrl { get { return BaseUrl + "/location"; } }
-
-        private string MapUrl { get { return BaseUrl + "/map"; } }
-
-        private string RouteUrl { get { return BaseUrl + "/route"; } }
-
-        private Uri GetUri(string baseUrl, IDictionary<string, string> parameters)
+        private static string DistanceUrl
         {
-            return new Uri(string.Format("{0}?{1}",
-                baseUrl,
-                string.Join("&",
-                    parameters.Select(kvp =>
-                        string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode(kvp.Value))))));
+            get
+            {
+                return BaseUrl + "/distance";
+            }
+        }
+
+        private static string LocationUrl
+        {
+            get
+            {
+                return BaseUrl + "/location";
+            }
+        }
+
+        private static string MapUrl
+        {
+            get
+            {
+                return BaseUrl + "/map";
+            }
+        }
+
+        private static string RouteUrl
+        {
+            get
+            {
+                return BaseUrl + "/route";
+            }
         }
 
         /// <summary>
@@ -42,33 +69,45 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="department">El departamento, estado, provincia, etc. Es opcional. El valor predeterminado es `ontevideo.</param>
         /// <param name="country">El país. Es opcional. El valor predeterminado es Uruguay.</param>
         /// <returns>Las coordenadas de la dirección.</returns>
-        public async Task<Location> GetLocationAsync(string address, string city = "Montevideo",
-            string department = "Montevideo", string country = "Uruguay")
+        public async Task<Location> GetLocationAsync(
+            [Required] string address,
+            [Required]string city = "Montevideo",
+            [Required]string department = "Montevideo",
+            [Required]string country = "Uruguay")
         {
             var parameters = new Dictionary<string, string>
             {
                 { "address", address },
                 { "city", city },
                 { "department", department },
-                { "country", country }
+                { "country", country },
             };
 
             var requestUri = GetUri(LocationUrl, parameters);
-            var response = await client.GetAsync(requestUri);
-            response.EnsureSuccessStatusCode();
 
-            string content = await response.Content.ReadAsStringAsync();
-            Location result = JsonSerializer.Deserialize<Location>(content,
-                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            Location result;
+
+            using (var response = await this.client.GetAsync(requestUri).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                result = JsonSerializer.Deserialize<Location>(
+                    content,
+                    new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            }
 
             return result;
         }
 
-        /// <summary>
-        /// Versión sincrónica de <see cref="GetLocationAsync"/>.
-        /// </summary>
-        public Location GetLocation(string address, string city = "Montevideo",
-            string department = "Montevideo", string country = "Uruguay")
+        /// <inheritdoc cref="GetLocationAsync" />
+        /// <remarks>
+        /// Versión sincrónica.
+        /// </remarks>
+        public Location GetLocation(
+            [Required] string address,
+            [Required] string city = "Montevideo",
+            [Required] string department = "Montevideo",
+            [Required] string country = "Uruguay")
         {
             return AsyncContext.Run(() => this.GetLocationAsync(address, city, department, country));
         }
@@ -79,31 +118,35 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="from">La coordenada de origen.</param>
         /// <param name="to">La coordenada de destino.</param>
         /// <returns>La distancia entre las dos coordenadas.</returns>
-        public async Task<Distance> GetDistanceAsync(Location from, Location to)
+        public async Task<Distance> GetDistanceAsync([Required] Location from, [Required] Location to)
         {
             var parameters = new Dictionary<string, string>
             {
                 { "fromLatitude", from.Latitude.ToString(CultureInfo.InvariantCulture) },
                 { "fromLongitude", from.Longitude.ToString(CultureInfo.InvariantCulture) },
                 { "toLatitude", to.Latitude.ToString(CultureInfo.InvariantCulture) },
-                { "toLongitude", to.Longitude.ToString(CultureInfo.InvariantCulture) }
+                { "toLongitude", to.Longitude.ToString(CultureInfo.InvariantCulture) },
             };
 
             var requestUri = GetUri(DistanceUrl, parameters);
-            var response = await client.GetAsync(requestUri);
-            response.EnsureSuccessStatusCode();
+            using (var response = await this.client.GetAsync(requestUri).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
 
-            string content = await response.Content.ReadAsStringAsync();
-            Distance result = JsonSerializer.Deserialize<Distance>(content,
-                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                Distance result = JsonSerializer.Deserialize<Distance>(
+                    content,
+                    new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
-            return result;
+                return result;
+            }
         }
 
-        /// <summary>
-        /// Versión sincrónica de <see cref="GetDistanceAsync(Location,Location)"/>.
-        /// </summary>
-        public Distance GetDistance(Location from, Location to)
+        /// <inheritdoc cref="GetDistanceAsync(Location,Location)" />
+        /// <remarks>
+        /// Versión sincrónica.
+        /// </remarks>
+        public Distance GetDistance([Required] Location from, [Required] Location to)
         {
             return AsyncContext.Run(() => this.GetDistanceAsync(from, to));
         }
@@ -114,29 +157,31 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="from">La dirección de origen.</param>
         /// <param name="to">La dirección de destino.</param>
         /// <returns>La distancia entre las dos direcciones.</returns>
-        public async Task<Distance> GetDistanceAsync(string from, string to)
+        public async Task<Distance> GetDistanceAsync([Required] string from, [Required] string to)
         {
             var parameters = new Dictionary<string, string>
             {
                 { "fromAddress", from },
-                { "toAddress", to }
+                { "toAddress", to },
             };
 
             var requestUri = GetUri(DistanceUrl, parameters);
-            var response = await client.GetAsync(requestUri);
+            using var response = await this.client.GetAsync(requestUri).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            string content = await response.Content.ReadAsStringAsync();
-            Distance result = JsonSerializer.Deserialize<Distance>(content,
+            string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            Distance result = JsonSerializer.Deserialize<Distance>(
+                content,
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             return result;
         }
 
-       /// <summary>
-        /// Versión sincrónica de <see cref="GetDistanceAsync(string,string)"/>.
-        /// </summary>
-        public Distance GetDistance(string from, string to)
+        /// <inheritdoc cref="GetDistanceAsync(string,string)" />.
+        /// <remarks>
+        /// Versión sincrónica.
+        /// </remarks>
+        public Distance GetDistance([Required] string from, [Required] string to)
         {
             return AsyncContext.Run(() => this.GetDistanceAsync(from, to));
         }
@@ -149,30 +194,32 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="path">La ruta del archivo donde guardar el mapa. El formato es PNG.</param>
         /// <param name="zoomLevel">El nivel de zoom del mapa entre 1 y 20. Es opcional. El valor predeterminado es
         /// 15.</param>
-        public async Task DownloadMapAsync(double latitude, double longitude, string path, int zoomLevel = 15)
+        /// <returns>
+        /// Una tarea que representa la operación asincrónica.
+        /// </returns>
+        public async Task DownloadMapAsync(double latitude, double longitude, [Required] string path, int zoomLevel = 15)
         {
             var parameters = new Dictionary<string, string>
             {
                 { "latitude", latitude.ToString(CultureInfo.InvariantCulture) },
                 { "longitude", longitude.ToString(CultureInfo.InvariantCulture) },
-                { "zoomLevel", zoomLevel.ToString(CultureInfo.InvariantCulture) }
+                { "zoomLevel", zoomLevel.ToString(CultureInfo.InvariantCulture) },
             };
 
             var requestUri = GetUri(MapUrl, parameters);
-            var response = await client.GetAsync(requestUri);
+            using var response = await this.client.GetAsync(requestUri).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            using (var fs = new FileStream(path, FileMode.OpenOrCreate))
-            {
-                await response.Content.CopyToAsync(fs);
-                var stream = await response.Content.ReadAsStreamAsync();
-            }
+            using var fs = new FileStream(path, FileMode.OpenOrCreate);
+            await response.Content.CopyToAsync(fs).ConfigureAwait(false);
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
 
-       /// <summary>
-        /// Versión sincrónica de <see cref="DownloadMapAsync()"/>.
-        /// </summary>
-        public void DownloadMap(double latitude, double longitude, string path, int zoomLevel = 15)
+        /// <inheritdoc cref="LocationApiClient.DownloadMapAsync(double, double, string, int)" />.
+        /// <remarks>
+        /// Versión sincrónica.
+        /// </remarks>
+        public void DownloadMap(double latitude, double longitude, [Required] string path, int zoomLevel = 15)
         {
             AsyncContext.Run(() => this.DownloadMapAsync(latitude, longitude, path, zoomLevel));
         }
@@ -185,35 +232,88 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="toLatitude">La latitud de la coordenada de destino.</param>
         /// <param name="toLongitude">La longitud de la coordenada de destino.</param>
         /// <param name="path">La ruta del archivo donde guardar el mapa. Es formato es PNG.</param>
-        public async Task DownloadRouteAsync(double fromLatitude, double fromLongitude,
-            double toLatitude, double toLongitude, string path)
+        /// <returns>
+        /// Una tarea que representa la operación asincrónica.
+        /// </returns>
+        public async Task DownloadRouteAsync(
+            double fromLatitude,
+            double fromLongitude,
+            double toLatitude,
+            double toLongitude,
+            [Required] string path)
         {
             var parameters = new Dictionary<string, string>
             {
                 { "fromLatitude", fromLatitude.ToString(CultureInfo.InvariantCulture) },
                 { "fromLongitude", fromLongitude.ToString(CultureInfo.InvariantCulture) },
                 { "toLatitude", toLatitude.ToString(CultureInfo.InvariantCulture) },
-                { "toLongitude", toLongitude.ToString(CultureInfo.InvariantCulture) }
+                { "toLongitude", toLongitude.ToString(CultureInfo.InvariantCulture) },
             };
 
             var requestUri = GetUri(RouteUrl, parameters);
-            var response = await client.GetAsync(requestUri);
+            using var response = await this.client.GetAsync(requestUri).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            using (var fs = new FileStream(path, FileMode.OpenOrCreate))
+            using var fs = new FileStream(path, FileMode.OpenOrCreate);
+            await response.Content.CopyToAsync(fs).ConfigureAwait(false);
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        }
+
+        /// <inheritdoc cref="LocationApiClient.DownloadRouteAsync(double, double, double, double, string)" />
+        /// <remarks>
+        /// Versión sincrónica.
+        /// </remarks>
+        public void DownloadRoute(
+            double fromLatitude,
+            double fromLongitude,
+            double toLatitude,
+            double toLongitude,
+            [Required] string path)
+        {
+            if (string.IsNullOrEmpty(path))
             {
-                await response.Content.CopyToAsync(fs);
-                var stream = await response.Content.ReadAsStreamAsync();
+                throw new ArgumentException("Is null or empty", nameof(path));
+            }
+
+            AsyncContext.Run(() => this.DownloadRouteAsync(fromLatitude, fromLongitude, toLatitude, toLongitude, path));
+        }
+
+        /// <inheritdoc cref="IDisposable" />
+        public void Dispose()
+        {
+            this.Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc cref="IDisposable" />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.client.Dispose();
+                }
+
+                this.disposedValue = true;
             }
         }
 
-       /// <summary>
-        /// Versión sincrónica de <see cref="DownloadRouteAsync()"/>.
-        /// </summary>
-        public void DownloadRoute(double fromLatitude, double fromLongitude,
-            double toLatitude, double toLongitude, string path)
+        private static Uri GetUri(string baseUrl, IDictionary<string, string> parameters)
         {
-            AsyncContext.Run(() => this.DownloadRouteAsync(fromLatitude, fromLongitude, toLatitude, toLongitude, path));
+            return new Uri(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0}?{1}",
+                    baseUrl,
+                    string.Join(
+                        "&",
+                        parameters.Select(kvp =>
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "{0}={1}",
+                            kvp.Key,
+                            HttpUtility.UrlEncode(kvp.Value))))));
         }
     }
 }

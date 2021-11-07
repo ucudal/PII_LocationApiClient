@@ -1,4 +1,10 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------------------
+// <copyright file="Program.cs" company="Universidad Católica del Uruguay">
+//     Copyright (c) Programación II. Derechos reservados.
+// </copyright>
+//-----------------------------------------------------------------------------------
+
+using System;
 using System.Threading.Tasks;
 using Ucu.Poo.Locations.Client;
 
@@ -7,7 +13,7 @@ namespace Ucu.Poo.LocationApi.Demo
     /// <summary>
     /// Un programa que demuestra el uso del cliente de la API REST de localización.
     /// </summary>
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Punto de entrada al programa.
@@ -39,8 +45,12 @@ namespace Ucu.Poo.LocationApi.Demo
             await client.DownloadMapAsync(locationCentral.Latitude, locationCentral.Longitude, @"map-a.png");
             Console.WriteLine($"Descargado asincrónicamente el mapa de '{addressCentral}'");
 
-            await client.DownloadRouteAsync(locationCentral.Latitude, locationCentral.Longitude,
-                locationMullin.Latitude, locationMullin.Longitude, @"route-a.png");
+            await client.DownloadRouteAsync(
+                locationCentral.Latitude,
+                locationCentral.Longitude,
+                locationMullin.Latitude,
+                locationMullin.Longitude,
+                @"route-a.png");
             Console.WriteLine($"Descargado asincrónicamente el mapa de '{addressCentral}' a '{addressMullin}'");
 
             // Versión sincrónica
@@ -64,8 +74,12 @@ namespace Ucu.Poo.LocationApi.Demo
             client.DownloadMap(locationCentral.Latitude, locationCentral.Longitude, @"map-s.png");
             Console.WriteLine($"Descargado sincrónicamente el mapa de '{addressCentral}'");
 
-            client.DownloadRoute(locationCentral.Latitude, locationCentral.Longitude,
-                locationMullin.Latitude, locationMullin.Longitude, @"route-s.png");
+            client.DownloadRoute(
+                locationCentral.Latitude,
+                locationCentral.Longitude,
+                locationMullin.Latitude,
+                locationMullin.Longitude,
+                @"route-s.png");
             Console.WriteLine($"Descargado sincrónicamente el mapa de '{addressCentral}' a '{addressMullin}'");
         }
     }
