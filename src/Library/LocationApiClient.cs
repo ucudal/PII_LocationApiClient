@@ -14,7 +14,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using Nito.AsyncEx;
-using PostSharp.Patterns.Contracts;
 
 namespace Ucu.Poo.Locations.Client
 {
@@ -70,10 +69,10 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="country">El país. Es opcional. El valor predeterminado es Uruguay.</param>
         /// <returns>Las coordenadas de la dirección.</returns>
         public async Task<Location> GetLocationAsync(
-            [Required] string address,
-            [Required]string city = "Montevideo",
-            [Required]string department = "Montevideo",
-            [Required]string country = "Uruguay")
+            string address,
+            string city = "Montevideo",
+            string department = "Montevideo",
+            string country = "Uruguay")
         {
             var parameters = new Dictionary<string, string>
             {
@@ -104,10 +103,10 @@ namespace Ucu.Poo.Locations.Client
         /// Versión sincrónica.
         /// </remarks>
         public Location GetLocation(
-            [Required] string address,
-            [Required] string city = "Montevideo",
-            [Required] string department = "Montevideo",
-            [Required] string country = "Uruguay")
+            string address,
+            string city = "Montevideo",
+            string department = "Montevideo",
+            string country = "Uruguay")
         {
             return AsyncContext.Run(() => this.GetLocationAsync(address, city, department, country));
         }
@@ -118,7 +117,7 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="from">La coordenada de origen.</param>
         /// <param name="to">La coordenada de destino.</param>
         /// <returns>La distancia entre las dos coordenadas.</returns>
-        public async Task<Distance> GetDistanceAsync([Required] Location from, [Required] Location to)
+        public async Task<Distance> GetDistanceAsync(Location from, Location to)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -146,7 +145,7 @@ namespace Ucu.Poo.Locations.Client
         /// <remarks>
         /// Versión sincrónica.
         /// </remarks>
-        public Distance GetDistance([Required] Location from, [Required] Location to)
+        public Distance GetDistance(Location from, Location to)
         {
             return AsyncContext.Run(() => this.GetDistanceAsync(from, to));
         }
@@ -157,7 +156,7 @@ namespace Ucu.Poo.Locations.Client
         /// <param name="from">La dirección de origen.</param>
         /// <param name="to">La dirección de destino.</param>
         /// <returns>La distancia entre las dos direcciones.</returns>
-        public async Task<Distance> GetDistanceAsync([Required] string from, [Required] string to)
+        public async Task<Distance> GetDistanceAsync(string from, string to)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -181,7 +180,7 @@ namespace Ucu.Poo.Locations.Client
         /// <remarks>
         /// Versión sincrónica.
         /// </remarks>
-        public Distance GetDistance([Required] string from, [Required] string to)
+        public Distance GetDistance(string from, string to)
         {
             return AsyncContext.Run(() => this.GetDistanceAsync(from, to));
         }
@@ -197,7 +196,7 @@ namespace Ucu.Poo.Locations.Client
         /// <returns>
         /// Una tarea que representa la operación asincrónica.
         /// </returns>
-        public async Task DownloadMapAsync(double latitude, double longitude, [Required] string path, int zoomLevel = 15)
+        public async Task DownloadMapAsync(double latitude, double longitude, string path, int zoomLevel = 15)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -219,7 +218,7 @@ namespace Ucu.Poo.Locations.Client
         /// <remarks>
         /// Versión sincrónica.
         /// </remarks>
-        public void DownloadMap(double latitude, double longitude, [Required] string path, int zoomLevel = 15)
+        public void DownloadMap(double latitude, double longitude, string path, int zoomLevel = 15)
         {
             AsyncContext.Run(() => this.DownloadMapAsync(latitude, longitude, path, zoomLevel));
         }
@@ -240,7 +239,7 @@ namespace Ucu.Poo.Locations.Client
             double fromLongitude,
             double toLatitude,
             double toLongitude,
-            [Required] string path)
+            string path)
         {
             var parameters = new Dictionary<string, string>
             {
@@ -268,7 +267,7 @@ namespace Ucu.Poo.Locations.Client
             double fromLongitude,
             double toLatitude,
             double toLongitude,
-            [Required] string path)
+            string path)
         {
             if (string.IsNullOrEmpty(path))
             {
