@@ -22,7 +22,7 @@ namespace Ucu.Poo.Locations.Client
     /// </summary>
     public class LocationApiClient : IDisposable
     {
-        private const string BaseUrl = "https://pii-locationapi.azurewebsites.net";
+        private const string BaseUrl = "https://pii2024-locationapi.azurewebsites.net";
 
         private HttpClient client = new HttpClient();
 
